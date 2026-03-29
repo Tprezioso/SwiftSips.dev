@@ -4,7 +4,7 @@ import Ignite
 @main
 struct IgniteWebsite {
     static func main() async {
-        let site = ExampleSite()
+        let site = SwiftSipsSite()
 
         do {
             try await site.publish()
@@ -14,18 +14,21 @@ struct IgniteWebsite {
     }
 }
 
-struct ExampleSite: Site {
-  var name = "Hello World"
-  var titleSuffix = " – My Awesome Site"
-  var url = URL(static: "https://www.example.com")
-  var builtInIconsEnabled = true
+struct SwiftSipsSite: Site {
+    var name = "Swift Sips"
+    var titleSuffix = " | Swift Sips"
+    var url = URL(static: "https://www.example.com")
+    var builtInIconsEnabled = true
 
-  var author = "Thomas Prezioso Jr"
-  var homePage = Blog()
-  var staticLayouts: [any StaticLayout] = [Blog()]
-  var contentLayouts: [any ContentLayout] {
-    BlogPostLayout()
-  }
-  var layout = MainLayout()
-  var prettifyHTML = true
+    var author = "Thomas Prezioso Jr"
+    var homePage = Blog()
+    var tagLayout = Tags()
+    var staticLayouts: [any StaticLayout] = [Blog(), Archive(), About()]
+    var contentLayouts: [any ContentLayout] {
+        BlogPostLayout()
+    }
+    var layout = MainLayout()
+    var prettifyHTML = true
+    var syntaxHighlightingEnabled = true
+    var syntaxHighlighters: [HighlighterLanguage] = [.swift]
 }
