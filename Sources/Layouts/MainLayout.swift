@@ -8,6 +8,12 @@ struct MainLayout: Layout {
         HTMLDocument {
             HTMLHead(for: page, with: siteConfiguration)
             HTMLBody {
+                // Swift orange accent bar
+                Section {}
+                    .background(Color(hex: "#F05138"))
+                    .frame(height: .px(4))
+                    .ignorePageGutters()
+
                 NavigationBar(logo: "Swift Sips") {
                     Link("Blog", target: Blog())
                     Link("Archive", target: Archive())

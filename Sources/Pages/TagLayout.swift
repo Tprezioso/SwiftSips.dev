@@ -9,73 +9,152 @@ struct Tags: TagLayout {
             Text("Posts tagged: \(tag)")
                 .font(.title1)
                 .fontWeight(.black)
-                .margin(.top, .large)
+                .margin(.top, .xLarge)
+
+            Divider()
+                .margin(.bottom, .large)
 
             let blogPosts = content.filter { $0.type == "blog" }
             let archivePosts = content.filter { $0.type == "archive" }
 
             if blogPosts.isEmpty == false {
-                Section {
+                Grid(spacing: .medium) {
                     ForEach(blogPosts.sorted(by: { $0.date }, order: .reverse)) { post in
                         Card {
                             Text(post.description)
-                                .margin(.bottom, .none)
+                                .margin(.bottom, .small)
 
-                            Text(formattedDate(post.date))
-                                .foregroundStyle(.secondary)
-                                .font(.body)
+                            Group {
+                                Badge(formattedDate(post.date))
+                                    .role(.primary)
+                                    .badgeStyle(.subtleBordered)
+                                    .margin(.trailing, .small)
+
+                                Badge("\(post.estimatedReadingMinutes) min read")
+                                    .role(.info)
+                                    .badgeStyle(.subtleBordered)
+                            }
+                            .margin(.bottom, .small)
+
+                            Link("Read More", target: post.path)
+                                .linkStyle(.button)
+                                .role(.primary)
+                                .buttonSize(.small)
                         } header: {
                             Text {
                                 Link(post)
                                     .role(.none)
                             }
-                            .font(.title3)
+                            .font(.title4)
+                            .fontWeight(.bold)
                         }
-                        .margin(.top, 15)
+                        .cardStyle(.bordered)
+                        .shadow(radius: 4, y: 2)
+                        .hoverEffect { element in
+                            element.shadow(radius: 10, y: 5)
+                        }
+                        .transition(.fadeIn.duration(0.5), on: .appear)
                     }
                 }
+                .columns(2)
             }
 
             if archivePosts.isEmpty == false {
                 Text("Archived Posts")
                     .font(.title3)
+                    .fontWeight(.bold)
                     .foregroundStyle(.secondary)
                     .margin(.top, .xLarge)
+                    .margin(.bottom, .medium)
 
-                List {
+                Grid(spacing: .medium) {
                     ForEach(archivePosts.sorted(by: { $0.date }, order: .reverse)) { post in
-                        Link(post)
+                        Card {
+                            Text(post.description)
+                                .foregroundStyle(.secondary)
+                                .margin(.bottom, .small)
+
+                            Badge(formattedDate(post.date))
+                                .role(.secondary)
+                                .badgeStyle(.subtleBordered)
+                                .margin(.bottom, .small)
+
+                            Link("Read Post", target: post.path)
+                                .linkStyle(.button)
+                                .role(.secondary)
+                                .buttonSize(.small)
+                        } header: {
+                            Text {
+                                Link(post)
+                                    .role(.none)
+                            }
+                            .font(.title5)
+                            .fontWeight(.bold)
+                        }
+                        .cardStyle(.bordered)
+                        .shadow(radius: 3, y: 2)
+                        .transition(.fadeIn.duration(0.5), on: .appear)
                     }
                 }
-                .listStyle(.flushGroup)
+                .columns(2)
             }
         } else {
             Text("All Tags")
                 .font(.title1)
                 .fontWeight(.black)
-                .margin(.top, .large)
+                .margin(.top, .xLarge)
 
+            Divider()
+                .margin(.bottom, .large)
+
+            // Tag cloud with counts
             let allTags = Set(allContent.all.flatMap { $0.tags }).sorted()
 
             Section {
                 ForEach(allTags) { tag in
                     let tagPath = tag.lowercased().replacing(" ", with: "-")
+                    let count = allContent.all.filter { $0.tags.contains(tag) }.count
                     Link(target: "/tags/\(tagPath)") {
-                        Badge(tag)
+                        Badge("\(tag) (\(count))")
                             .role(.primary)
+                            .badgeStyle(.subtleBordered)
                             .margin(.trailing, .px(5))
-                            .margin(.bottom, .px(8))
+                            .margin(.bottom, .px(10))
                     }
                 }
             }
+            .margin(.bottom, .xLarge)
 
-            List {
+            Text("All Posts")
+                .font(.title3)
+                .fontWeight(.bold)
+                .margin(.bottom, .medium)
+
+            Grid(spacing: .medium) {
                 ForEach(content.sorted(by: { $0.date }, order: .reverse)) { article in
-                    Link(article)
+                    Card {
+                        Text(formattedDate(article.date))
+                            .foregroundStyle(.secondary)
+                            .margin(.bottom, .small)
+
+                        Link("Read More", target: article.path)
+                            .linkStyle(.button)
+                            .role(.primary)
+                            .buttonSize(.small)
+                    } header: {
+                        Text {
+                            Link(article)
+                                .role(.none)
+                        }
+                        .font(.title5)
+                        .fontWeight(.bold)
+                    }
+                    .cardStyle(.bordered)
+                    .shadow(radius: 3, y: 2)
+                    .transition(.fadeIn.duration(0.5), on: .appear)
                 }
             }
-            .listStyle(.flushGroup)
-            .margin(.top, .large)
+            .columns(3)
         }
     }
 

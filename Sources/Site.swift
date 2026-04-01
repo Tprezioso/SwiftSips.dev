@@ -17,12 +17,14 @@ struct IgniteWebsite {
 struct SwiftSipsSite: Site {
     var name = "Swift Sips"
     var titleSuffix = " | Swift Sips"
-    var url = URL(static: "https://www.example.com")
+    var url = URL(static: "https://swiftsips.dev")
     var builtInIconsEnabled = true
 
     var author = "Thomas Prezioso Jr"
     var homePage = Blog()
     var tagLayout = Tags()
+    var lightTheme: (any Theme)? = SwiftSipsLightTheme()
+    var darkTheme: (any Theme)? = SwiftSipsDarkTheme()
     var staticLayouts: [any StaticLayout] = [Blog(), Archive(), About()]
     var contentLayouts: [any ContentLayout] {
         BlogPostLayout()

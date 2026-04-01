@@ -11,13 +11,24 @@ struct Archive: StaticLayout {
         Text("Archive")
             .font(.title1)
             .fontWeight(.black)
-            .margin(.top, .large)
+            .margin(.top, .xLarge)
+
+        Text("Posts from the original WordPress blog, preserved for reference.")
+            .font(.lead)
+            .foregroundStyle(.secondary)
+            .margin(.bottom, .medium)
+
+        Divider()
+            .margin(.bottom, .large)
 
         Alert {
-            Text("These posts were originally published on my WordPress blog between 2019 and 2021. Some code examples may reference older versions of Swift or SwiftUI, but I've kept them here for reference.")
+            Text {
+                Image(systemName: "info-circle")
+                " These posts were originally published between 2019 and 2021. Some code examples may reference older versions of Swift or SwiftUI, but I've kept them here for reference."
+            }
         }
         .role(.info)
-        .margin(.bottom, .large)
+        .margin(.bottom, .xLarge)
 
         let archivePosts = content.typed("archive").sorted(by: { $0.date }, order: .reverse)
         let groupedByYear = Dictionary(grouping: archivePosts) { item in
@@ -29,26 +40,72 @@ struct Archive: StaticLayout {
                 .font(.title2)
                 .fontWeight(.bold)
                 .margin(.top, .large)
+                .margin(.bottom, .medium)
 
             if let posts = groupedByYear[year] {
-                List {
+                Badge("\(posts.count) posts")
+                    .role(.primary)
+                    .badgeStyle(.subtleBordered)
+                    .margin(.bottom, .medium)
+
+                Grid(spacing: .medium) {
                     ForEach(posts) { post in
-                        Group {
+                        Card {
+                            Text(post.description)
+                                .foregroundStyle(.secondary)
+                                .margin(.bottom, .small)
+
+                            Group {
+                                Badge(formattedDate(post.date))
+                                    .role(.secondary)
+                                    .badgeStyle(.subtleBordered)
+                                    .margin(.trailing, .small)
+
+                                Badge("\(post.estimatedReadingMinutes) min read")
+                                    .role(.info)
+                                    .badgeStyle(.subtleBordered)
+                            }
+                            .margin(.bottom, .small)
+
+                            Link("Read Post", target: post.path)
+                                .linkStyle(.button)
+                                .role(.primary)
+                                .buttonSize(.small)
+                        } header: {
                             Text {
                                 Link(post)
+                                    .role(.none)
                             }
                             .font(.title5)
-                            .margin(.bottom, .none)
-
-                            Text(formattedDate(post.date))
-                                .foregroundStyle(.secondary)
-                                .font(.body)
+                            .fontWeight(.bold)
                         }
+                        .cardStyle(.bordered)
+                        .shadow(radius: 3, y: 2)
+                        .hoverEffect { element in
+                            element.shadow(radius: 10, y: 5)
+                        }
+                        .transition(.fadeIn.duration(0.5), on: .appear)
                     }
                 }
-                .listStyle(.flushGroup)
+                .columns(2)
             }
         }
+
+        // Back to top
+        Divider()
+            .margin(.top, .xLarge)
+
+        Section {
+            Link(target: "#") {
+                Image(systemName: "arrow-up-circle")
+                " Back to top"
+            }
+            .linkStyle(.button)
+            .role(.secondary)
+            .buttonSize(.small)
+        }
+        .horizontalAlignment(.center)
+        .margin(.top, .medium)
     }
 
     private func formattedDate(_ date: Date) -> String {
