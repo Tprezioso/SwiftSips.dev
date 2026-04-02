@@ -30,6 +30,14 @@ struct SiteFooter: HTML {
                 .linkStyle(.button)
                 .role(.dark)
                 .buttonSize(.small)
+                .margin(.trailing, .small)
+
+                Link(target: "https://bsky.app/profile/tommyprezioso.bsky.social") {
+                    Image(systemName: "cloud-fill")
+                }
+                .linkStyle(.button)
+                .role(.info)
+                .buttonSize(.small)
             }
             .margin(.bottom, .medium)
 

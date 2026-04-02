@@ -11,10 +11,13 @@ struct Blog: StaticLayout {
 
         // Hero section
         Section {
-            Text("Swift Sips")
-                .font(.title1)
-                .fontWeight(.black)
-                .margin(.top, .xLarge)
+            Text {
+                Image(systemName: "cup-hot-fill")
+                " Swift Sips"
+            }
+            .font(.title1)
+            .fontWeight(.black)
+            .margin(.top, .xLarge)
 
             Text("Small sips of Swift wisdom. A blog about Swift and iOS development by Thomas Prezioso Jr.")
                 .font(.lead)

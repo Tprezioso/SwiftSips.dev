@@ -79,6 +79,16 @@ struct About: StaticLayout {
                     }
                     .linkStyle(.button)
                     .role(.dark)
+                    .margin(.bottom, .small)
+                }
+
+                Group {
+                    Link(target: "https://bsky.app/profile/tommyprezioso.bsky.social") {
+                        Image(systemName: "cloud-fill")
+                        " Bluesky"
+                    }
+                    .linkStyle(.button)
+                    .role(.info)
                 }
             }
             .cardStyle(.bordered)

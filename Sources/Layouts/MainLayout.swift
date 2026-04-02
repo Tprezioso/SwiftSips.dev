@@ -14,10 +14,15 @@ struct MainLayout: Layout {
                     .frame(height: .px(4))
                     .ignorePageGutters()
 
-                NavigationBar(logo: "Swift Sips") {
+                NavigationBar {
                     Link("Blog", target: Blog())
                     Link("Archive", target: Archive())
                     Link("About", target: About())
+                } logo: {
+                    return Text {
+                        Image(systemName: "cup-hot-fill")
+                        " Swift Sips"
+                    }
                 }
                 .navigationBarStyle(.dark)
                 .navigationItemAlignment(.trailing)
