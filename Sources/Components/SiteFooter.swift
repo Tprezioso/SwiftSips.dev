@@ -41,6 +41,16 @@ struct SiteFooter: HTML {
             }
             .margin(.bottom, .medium)
 
+            Text {
+                Image(systemName: "rss-fill")
+                    .foregroundStyle("#f26522")
+                    .margin(.trailing, .px(10))
+
+                Link("RSS Feed", target: "/feed.rss")
+            }
+            .horizontalAlignment(.center)
+            .margin(.bottom, .medium)
+
             Text("© 2026 Thomas Prezioso Jr. All rights reserved.")
                 .foregroundStyle(.tertiary)
                 .font(.body)

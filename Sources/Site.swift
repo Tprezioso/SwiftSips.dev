@@ -19,6 +19,7 @@ struct SwiftSipsSite: Site {
     var titleSuffix = " | Swift Sips"
     var url = URL(static: "https://swiftsips.dev")
     var builtInIconsEnabled = true
+    var feedConfiguration = FeedConfiguration(mode: .descriptionOnly, contentCount: 20, path: "/feed.rss")
 
     var author = "Thomas Prezioso Jr"
     var homePage = Blog()
