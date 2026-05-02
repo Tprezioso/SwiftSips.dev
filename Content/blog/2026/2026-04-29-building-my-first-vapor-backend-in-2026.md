@@ -5,17 +5,15 @@ tags: Swift, ServerSideSwift, Vapor
 ---
 # Building My First Vapor Backend in 2026 pt. 1
 
-I really want to learn how to build server side swift apps! 
+I really want to learn how to build server-side Swift apps! 
 
-For years I have been doing frontend iOS development without really knowing what was happening when I made a HTTP request to a server. I know at a high level whats going on but I have never dove into writing my own backend for an app or website. 
+For years I have been doing frontend iOS development without really knowing what was happening when you make a request to a server. I know at a high level what's going on, but I have never dived into writing my own backend for an app or website. 
 
-This year that changes! I have tried to learn server side swift in the past but either gave up because I had to much going on in my life (Now with 2 kids) or didn't have a project I was building it for.
+This year that changes! I have tried to learn server-side Swift in the past but either gave up because I had too much going on in my life (now with 2 kids) or didn't have a project I was building it for.
 
-This year that changes. With my revival of this blog, I thought I would take another try at learning server side swift.
+I thought why not take another try at learning server-side Swift and start by using the Vapor framework.
 
-If you’re a Swift developer and you want to learn backend development in 2026, Vapor is still one of the best places to start. Hummingbird is a fantastic option too but I am choosing to start with Vapor just because Vapor gives you everything you need out of the box to start building your backend. With not really knowing what I am doing this is a fantastic place to start.
-
-In this series of posts we are going to be building a real backend project step by step and evolve it into something "production-ready". Recently I make an app that saves URL links into a list and allows you to tag, search, and read from those links. For my TrapprKeeper app I used SQLite-Data (a fantastic framework by the amazing team at Point Free) but I want to see how I can build similar functionality making my own server side backend.
+In this series of posts, we are going to be building a backend project step by step and keep evolving it into something "production-ready" using Vapor. Recently, I made an app called [TrapprKeeper](https://apps.apple.com/us/app/trapprkeeper/id6757106221) (shameless plug 🤣), that saves URL links into a list and allows you to tag, search, and read from those links. For my [TrapprKeeper](https://apps.apple.com/us/app/trapprkeeper/id6757106221) app, I used [SQLite-Data](https://github.com/pointfreeco/sqlite-data) (a fantastic framework by the amazing team at Point Free), but I want to see how I can build similar functionality by making my own server-side backend.
 
 The real benefit is that if you already know Swift, Codable, async/await, and basic app architecture, you are not starting from zero. You are really learning how to apply familiar Swift skills to HTTP APIs and backend systems. 
 
@@ -27,13 +25,13 @@ or
 
 `vapor new app-name` for an interactive setup flow where you choose the options you want
 
-For this series, I want to use the interactive version because it teaches the easiest way to setup a project for beginners. 
+For this series, I want to use the interactive version since it shows you some Vapor recommended options you have when setting up a Vapor project. In the future when you know exactly how and what you want to build I would maybe recommend `vapor new hello -n` so you are starting with a blank project.
 
 ---
 
 ## What we are building:
 
-Our project will be called **LinkVault**.
+The call the project we are going to build **LinkVault**.
 
 Eventually, this backend will let users:
 
@@ -41,60 +39,60 @@ Eventually, this backend will let users:
 - organize them into collections
 - tag them
 - search through them
-- mark them read or unread
+- mark them as read or unread
 - sync metadata in the background
 
-But in Part 1, of what I suspect will be an on going series of posts, we are only setting up the project and creating the first routes.
+But in Part 1, of what I suspect will be an ongoing series of posts, we are only setting up the project and creating our first routes.
 
 ---
 
 ## Prerequisites:
 
-Before we start lets make sure you have:
+Before we start, let's make sure you have:
 
 - A Mac or a Linux machine with Swift installed via Xcode if using a Mac or the Swift toolchain if you are on Linux
-- Homebrew installed
+- [Homebrew](https://brew.sh/) installed
 - a terminal you are comfortable using
-- And a coding editor (Xcode if you are on a back or VSCode or some other editor)
+- and a coding editor (Xcode if you are on a Mac, VSCode, or some other editor)
 
-For this tutorial I will be using a Mac so from here on down I will be going through the Mac way of building this project.
+For this tutorial, I will be using a Mac, so from here on out I will be going through the Mac way of building this project with Xcode and a basic terminal.
 
-First thing we need to do is open our terminal and type:
+The first thing we need to do is open our terminal and type:
 ```bash
 brew install vapor
 ```
 
-This will install the Vapor framework onto our machines. This
-Once that is finished installing we will run:
+This will install the Vapor framework onto our machine.
+Once that is finished installing, we will run:
 ```bash
-vapor --help
+vapor --version
 ```
-This is to just show that everything we just installed correctly and working.
+This will print out the version of Vapor we are using in the terminal. We want to do this just to confirm that everything was installed correctly.
 
-Now that Vapor is installed lets create our project:
+Now that Vapor is installed, let's create our project:
 
 ```bash
 vapor new LinkVault
 ```
 
-This command opens Vapor's interactive prompt so you can choose the features you want in your starting template. Vapor recommends we select Fluent and Postgres so we will pick both of these choices for out app.
+This command opens Vapor's interactive prompt so you can choose the features you want in your starting template. Vapor recommends we select Fluent and Postgres, so we will pick both of these choices for our app.
 
-As we are prompted in our terminal we will pick 
+As we are prompted in our terminal, we will pick:
 - Fluent
 - Postgres
-- No Leaf
+- No to using Leaf
 
 So why these choices?
 
-**Fluent** is Vapor’s ORM and database abstraction layer. We are going to use it throughout the series for models, migrations, and database queries.
+[Fluent](https://docs.vapor.codes/fluent/overview/) is Vapor’s ORM (Object-Relational Mapping) and database abstraction layer. We are going to use it throughout the series for models, migrations, and database queries.
 
-**Postgres** is the database we are using for this backend tutorial. The official Vapor docs specifically recommend Fluent with Postgres for database-backed setups, including deployment-oriented guides.
+[Postgres](https://www.postgresql.org/) is the database we are using for this backend tutorial. The official Vapor docs specifically recommend Fluent with Postgres for database-backed setups, including deployment-oriented guides.
 
-Skipping **Leaf** keeps this series focused on building a JSON API. Leaf is Vapor’s templating engine for generating dynamic HTML pages and email-style rendered output, which is useful, but not what we need for an API-first tutorial.
+Skipping [Leaf](https://docs.vapor.codes/leaf/overview/) keeps this series focused on building a JSON API. Leaf is Vapor’s templating engine for generating dynamic HTML pages and email-style rendered output, which is useful, but not what we need for an API-first tutorial (But definitely a future topic I want to explore).
 
 ---
 
-## Setup and Running our app:
+## Setup and Running Our App:
 Now let's go into our project:
 
 ```bash
@@ -103,16 +101,16 @@ cd LinkVault
 
 Now let's open up LinkVault in Xcode. (Fun trick, if you have Xcode in your Applications folder and you are in the directory you want to open, you can use the command `xed .`. This will open the current directory in Xcode.)
 
-Let's start by just running the app. Make sure your destination in Xcode is set to My Mac and then hit Command + R to run it or click on the play button.
+Let's start by just running the app. Make sure your destination in Xcode is set to My Mac, and then hit Command + R to run it or click on the play button.
 
-Then we can open a web browser and going to `http://localhost:8080` where we should see the message ***"It works!"***. Congratulations! You just made your first Vapor app! 🥳
+Then we can open a web browser and go to `http://localhost:8080` where we should see the message ***"It works!"***. Congratulations! You just made your first Vapor app! 🥳
 
 ---
 
 ## Making Our First Route:
 
-Now that we have successfully setup our project and it is running let's make out first custom route.
-We can navigate to Sources > LinkVault > routes.swift. Now that we are in the routes folder we can go below the generated code and add the following our own ***health*** route like the code below:
+Now that we have successfully set up our project and it is running, let's make our first custom route.
+We can navigate to our routes.swift file by going to Sources > LinkVault > routes.swift from out file navigator. Now that we are in the routes file, we can go below the generated code and add our own ***health*** route like the code below:
 
 ```swift
 import Fluent
@@ -135,7 +133,7 @@ func routes(_ app: Application) throws {
 }
 ``` 
 
-Now lets re-run our app and lets go back to the browser and add `/health` to the end of our localhost url.
+Now let's re-run our app and go back to the browser and add `/health` to the end of our localhost URL.
 
 ```bash
 http://127.0.0.1:8080/health
@@ -151,11 +149,11 @@ We should now be routed to a new page where we will see:
 
 A health route may seem small, but it is one of the best habits you can build early. Real backends almost always benefit from having a simple endpoint that proves the server is alive and responding.
 
-Next lets make a typed JSON response. We will do this by using Vapor's `Content` protocol. We are going to add a WelcomeResponse type with a name, message, and our API version.
+Next, let's make a typed JSON response. We will do this by using Vapor's `Content` protocol. We are going to add a ***WelcomeResponse*** struct type with a name, message, and our API version.
 
 The Content protocol is Vapor’s main way to encode and decode request and response bodies. It is one of the core ideas we’ll use constantly when building APIs.
 
-Lets update the **routes.swift**:
+Let's update the **routes.swift**:
 
 ```swift
 import Vapor
@@ -181,7 +179,7 @@ func routes(_ app: Application) throws {
 }
 ```
 
-Now if we re-run our app and refresh our browser go to `http://127.0.0.1:8080/api/welcome` we should our new JSON Welcome type being returned.
+Now if we re-run our app and refresh our browser, then go to `http://127.0.0.1:8080/api/welcome`, we should see our new JSON Welcome type being returned.
 
 ```JSON
 {
@@ -193,7 +191,7 @@ Now if we re-run our app and refresh our browser go to `http://127.0.0.1:8080/ap
 
 This is one of the places where Vapor feels very natural to someone coming from Swift development. You create a Swift type, return it from a route, and Vapor handles the JSON encoding.
 
-Lastly let create a mock of a future route we are going to use to retrieve our links. Lets start by LinkPreview struct:
+Lastly, let's create a mock of a future route we are going to use to retrieve our links. Let's start with the LinkPreview struct:
 
 ```swift
 struct LinkPreview: Content {
@@ -204,7 +202,7 @@ struct LinkPreview: Content {
 }
 ```
 
-Next let's add a some mock data and a new route to our `func routes(_ app: Application)` to return our mocked links.
+Next, let's add some mock data and a new route to our `func routes(_ app: Application)` to return our mocked links.
 
 ```swift
     let sampleLinks: [LinkPreview] = [
@@ -228,7 +226,7 @@ Next let's add a some mock data and a new route to our `func routes(_ app: Appli
 
 ```
 
-Now we can re-run our app and reload our browser and we should see:
+Now we can re-run our app and reload our browser and go to `http://127.0.0.1:8080/api/links` we should see:
 
 ```JSON
 [
@@ -247,20 +245,20 @@ Now we can re-run our app and reload our browser and we should see:
 ]
 ```
 
-Awesome! This ends the part 1 of this series of posts I will be doing on learning server side swift. I want to try and keep these posts short and sweet just like a little sip of Swift development (Swift Sips...you see what I did there 🤣). In part 2 we will be taking are new `links` route and we will be replacing it with a real model, a migration, and CRUD database!
+Awesome! This ends Part 1 of this series of posts I will be doing on learning server-side Swift. I want to try and keep these posts short and sweet, just like a little sip of Swift development (Swift Sips...you see what I did there 🤣). In Part 2, we will be taking our new `links` route and replacing it with a real model, adding a migration, and a CRUD database!
 
-So just to recap, in the post we have:
-- setup a Vapor project to use Fluent + Postgres
+So just to recap, in this post we have:
+- set up a Vapor project to use Fluent + Postgres
 - learned how to run the app locally in our browser
-- added some starter routes for use play with
+- added some starter routes for us to play with
 - returned JSON responses using Swift types
 
-## Whats Next?
+## What's Next?
 In Part 2, we’ll take our mocked /api/links route and turn it into a real database-backed API using:
 
 - a Link model
 - a Fluent migration
--  some Postgres
+- some Postgres
 - create, list, get, update, and delete endpoints for our links
 
-That is where this project is going to starts to feel like a real backend instead of a starter app. Thanks for following along and until next time, happy coding! 🤘 
+That is where this project is going to start to feel like a real backend instead of a starter app. Thanks for following along, and until next time, happy coding! 🤘

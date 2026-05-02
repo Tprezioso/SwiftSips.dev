@@ -41,7 +41,7 @@ struct SiteFooter: HTML {
             }
             .margin(.bottom, .medium)
 
-            Text("© 2025 Thomas Prezioso Jr. All rights reserved.")
+            Text("© 2026 Thomas Prezioso Jr. All rights reserved.")
                 .foregroundStyle(.tertiary)
                 .font(.body)
 
