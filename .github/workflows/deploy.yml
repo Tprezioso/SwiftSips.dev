@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build site
-        run: swift run
+        run: swift run SwiftSips
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
