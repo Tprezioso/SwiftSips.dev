@@ -1,6 +1,6 @@
 ---
 title: Adding Some Clean Up and Validation to My First Vapor Backend in 2026 pt. 4
-date: 2026-06-22 20:37
+date: 2026-07-05 20:37
 tags: Swift, ServerSideSwift, Vapor
 ---
 # Adding Some Clean Up and Validation to My First Vapor Backend in 2026 pt. 4
